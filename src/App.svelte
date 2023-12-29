@@ -1,47 +1,32 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
+  let questions = [
+    {id: 1, text: 'Where did you go to school?'},
+    {id: 2, text: `What's your mother's name?`},
+    {id: 3, text: `Where are you from?`},
+  ];
+
+  let selected;
+
+  let answer = ''
+
+  function clearAnswer() {
+    answer = '';
+  }
+  function handleSubmit() {
+    alert(`Answred the quastion number ${selected.id} (${selected.text}) with ${answer}`);
+  }
 </script>
 
-<main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
+<form on:submit|preventDefault={handleSubmit}>
+  <select bind:value={selected} on:change={clearAnswer}>
+    {#each questions as question}
+      <option value={question}>
+        {question.text}
+      </option>
+    {/each}
+  </select>
 
-  <div class="card">
-    <Counter />
-  </div>
+  <input type="text" bind:value={answer}>
 
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
-  </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
-</main>
-
-<style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
-</style>
+  <button type="submit" disabled={!answer}>Submit</button>
+</form>
