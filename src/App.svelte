@@ -1,47 +1,40 @@
 <script>
-  import svelteLogo from './assets/svelte.svg'
-  import viteLogo from '/vite.svg'
-  import Counter from './lib/Counter.svelte'
+  import { fly } from "svelte/transition";
+
+  let visible = true;
+  let status = 'waiting...';
+
+  function endIntro() {
+    status = 'intro has ended';
+
+    setTimeout(() => {
+      status = 'waiting...';
+    }, 2000)
+  }
+
+  function endOutro() {
+    status = 'outro has ended';
+
+    setTimeout(() => {
+      status = 'waiting...'
+    }, 2000)
+  }
 </script>
 
-<main>
-  <div>
-    <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-      <img src={viteLogo} class="logo" alt="Vite Logo" />
-    </a>
-    <a href="https://svelte.dev" target="_blank" rel="noreferrer">
-      <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
-    </a>
-  </div>
-  <h1>Vite + Svelte</h1>
+<p>Status: {status}</p>
 
-  <div class="card">
-    <Counter />
-  </div>
+<label>
+  <input type="checkbox" bind:checked={visible}>
+  Visible
+</label>
 
-  <p>
-    Check out <a href="https://github.com/sveltejs/kit#readme" target="_blank" rel="noreferrer">SvelteKit</a>, the official Svelte app framework powered by Vite!
+{#if visible}
+  <p transition:fly={{y:200, duration: 2000}}
+   on:introstart={()=>{status = 'intro has started'}}
+   on:outrostart={()=>{status = 'outro has started'}}
+   on:introend={endIntro}
+   on:outroend={endOutro}
+   >
+    Flies in and out.
   </p>
-
-  <p class="read-the-docs">
-    Click on the Vite and Svelte logos to learn more
-  </p>
-</main>
-
-<style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
-</style>
+{/if}
